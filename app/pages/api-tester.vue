@@ -75,6 +75,8 @@ function selectFromHistory(entry: any) {
   store.currentEndpoint = entry.request.endpoint
   store.currentMethod = entry.request.method
   store.currentBody = entry.request.body
+  store.response = entry.response
+  streamingData.value = entry.response.isStreaming ? entry.response.data : ''
 }
 </script>
 
