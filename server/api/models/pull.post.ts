@@ -1,0 +1,22 @@
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event)
+
+  if (!body?.name) {
+    throw createError({ statusCode: 400, statusMessage: 'Model name is required' })
+  }
+
+  const host = getOllamaHost(event)
+  const response = await fetch(`${host}/api/pull`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: body.name, stream: true }),
+  })
+
+  if (!response.ok || !response.body) {
+    const error = await response.text().catch(() => 'Pull failed')
+    throw createError({ statusCode: response.status, statusMessage: error })
+  }
+
+  setResponseHeader(event, 'Content-Type', 'application/x-ndjson')
+  return sendStream(event, response.body)
+})

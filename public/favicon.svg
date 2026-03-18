@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a5f"/>
+      <stop offset="100%" stop-color="#09090b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background -->
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <!-- Llama silhouette (stylized) -->
+  <g fill="url(#accent)">
+    <!-- Head -->
+    <ellipse cx="64" cy="42" rx="16" ry="18"/>
+    <!-- Left ear -->
+    <path d="M50 36 L44 18 Q43 15 46 16 L54 30Z"/>
+    <!-- Right ear -->
+    <path d="M78 36 L84 18 Q85 15 82 16 L74 30Z"/>
+    <!-- Body -->
+    <ellipse cx="64" cy="76" rx="24" ry="22"/>
+    <!-- Neck -->
+    <rect x="54" y="54" width="20" height="16" rx="6"/>
+    <!-- Front legs -->
+    <rect x="46" y="90" width="8" height="20" rx="4"/>
+    <rect x="74" y="90" width="8" height="20" rx="4"/>
+  </g>
+  <!-- Eyes -->
+  <circle cx="58" cy="40" r="3" fill="#09090b"/>
+  <circle cx="70" cy="40" r="3" fill="#09090b"/>
+  <!-- Eye shine -->
+  <circle cx="59.5" cy="39" r="1" fill="#fff" opacity="0.8"/>
+  <circle cx="71.5" cy="39" r="1" fill="#fff" opacity="0.8"/>
+  <!-- Dashboard dots on body -->
+  <circle cx="56" cy="72" r="2.5" fill="#09090b" opacity="0.3"/>
+  <circle cx="64" cy="72" r="2.5" fill="#09090b" opacity="0.3"/>
+  <circle cx="72" cy="72" r="2.5" fill="#09090b" opacity="0.3"/>
+  <circle cx="60" cy="80" r="2.5" fill="#09090b" opacity="0.3"/>
+  <circle cx="68" cy="80" r="2.5" fill="#09090b" opacity="0.3"/>
+</svg>

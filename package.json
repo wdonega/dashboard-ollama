@@ -1,0 +1,38 @@
+{
+  "name": "ollama-dashboard",
+  "type": "module",
+  "description": "A modern web dashboard for interacting with Ollama, built with Nuxt 4",
+  "license": "MIT",
+  "author": "jemagne",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jemagne/Dashboard-Ollama.git"
+  },
+  "keywords": [
+    "ollama",
+    "dashboard",
+    "nuxt",
+    "vue",
+    "llm",
+    "ai"
+  ],
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.11.3",
+    "nuxt": "^4.1.3",
+    "nuxt-anime": "^0.1.13",
+    "vue": "^3.5.30",
+    "vue-router": "^5.0.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.1",
+    "@types/node": "^25.5.0",
+    "tailwindcss": "^4.2.1"
+  }
+}
