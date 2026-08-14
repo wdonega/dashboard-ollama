@@ -14,11 +14,14 @@ RUN npm run build
 # Stage 3: Production runtime
 FROM node:22-slim AS runtime
 WORKDIR /app
-COPY --from=build /app/.output ./.output
+COPY --from=build --chown=node:node /app/.output ./.output
+#COPY --from=build /app/.output ./.output
 
 ENV HOST=0.0.0.0
 ENV PORT=3000
 ENV NUXT_OLLAMA_HOST=http://localhost:11434
+
+USER node
 
 EXPOSE 3000
 
