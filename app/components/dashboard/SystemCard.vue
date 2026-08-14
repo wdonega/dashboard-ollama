@@ -1,7 +1,8 @@
 <script setup lang="ts">
 const props = defineProps<{
+  cpu: { used_percent: number }
   ram: { used_mb: number; total_mb: number }
-  gpu: { name: string; vram_used_mb: number; vram_total_mb: number } | null
+  gpu: { name: string; vram_used_mb?: number; vram_total_mb?: number; load_percent?: number; temp_celsius?: number } | null
 }>()
 
 function formatMB(mb: number): string {
@@ -19,6 +20,12 @@ function barColor(pct: number): string {
   if (pct >= 75) return 'bg-warning'
   return 'bg-accent'
 }
+
+function badgeColor(pct: number): string {
+  if (pct >= 90) return 'text-danger'
+  if (pct >= 75) return 'text-warning'
+  return 'text-accent'
+}
 </script>
 
 <template>
@@ -32,45 +39,89 @@ function barColor(pct: number): string {
       <h3 class="text-sm font-medium text-text-secondary" style="font-family: var(--font-heading)">System Resources</h3>
     </div>
 
+    <!-- CPU -->
+    <div class="mb-5">
+      <div class="flex justify-between items-center text-sm mb-2">
+        <span class="text-text-primary font-medium">CPU</span>
+        <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-bg-tertiary" :class="badgeColor(cpu.used_percent)">
+          {{ cpu.used_percent }}%
+        </span>
+      </div>
+      <div class="w-full h-3 bg-bg-tertiary rounded-full overflow-hidden">
+        <div
+            class="h-full rounded-full transition-all duration-500"
+            :class="barColor(cpu.used_percent)"
+            :style="{ width: `${cpu.used_percent}%` }"
+        />
+      </div>
+    </div>
+
     <!-- RAM -->
     <div class="mb-5">
       <div class="flex justify-between items-center text-sm mb-2">
         <span class="text-text-primary font-medium">RAM</span>
         <div class="flex items-center gap-2">
           <span class="text-text-secondary text-xs">{{ formatMB(ram.used_mb) }} / {{ formatMB(ram.total_mb) }}</span>
-          <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-bg-tertiary" :class="percentage(ram.used_mb, ram.total_mb) >= 90 ? 'text-danger' : percentage(ram.used_mb, ram.total_mb) >= 75 ? 'text-warning' : 'text-accent'">
+          <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-bg-tertiary" :class="badgeColor(percentage(ram.used_mb, ram.total_mb))">
             {{ percentage(ram.used_mb, ram.total_mb) }}%
           </span>
         </div>
       </div>
       <div class="w-full h-3 bg-bg-tertiary rounded-full overflow-hidden">
         <div
-          class="h-full rounded-full transition-all duration-500"
-          :class="barColor(percentage(ram.used_mb, ram.total_mb))"
-          :style="{ width: `${percentage(ram.used_mb, ram.total_mb)}%` }"
+            class="h-full rounded-full transition-all duration-500"
+            :class="barColor(percentage(ram.used_mb, ram.total_mb))"
+            :style="{ width: `${percentage(ram.used_mb, ram.total_mb)}%` }"
         />
       </div>
     </div>
 
-    <!-- GPU -->
-    <div v-if="gpu">
+    <!-- GPU: discrete card (VRAM used/total), e.g. nvidia-smi hosts -->
+    <div v-if="gpu && gpu.vram_total_mb !== undefined">
       <div class="flex justify-between items-center text-sm mb-2">
         <span class="text-text-primary font-medium">{{ gpu.name }}</span>
         <div class="flex items-center gap-2">
-          <span class="text-text-secondary text-xs">{{ formatMB(gpu.vram_used_mb) }} / {{ formatMB(gpu.vram_total_mb) }}</span>
-          <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-bg-tertiary" :class="percentage(gpu.vram_used_mb, gpu.vram_total_mb) >= 90 ? 'text-danger' : percentage(gpu.vram_used_mb, gpu.vram_total_mb) >= 75 ? 'text-warning' : 'text-accent'">
-            {{ percentage(gpu.vram_used_mb, gpu.vram_total_mb) }}%
+          <span class="text-text-secondary text-xs">{{ formatMB(gpu.vram_used_mb ?? 0) }} / {{ formatMB(gpu.vram_total_mb) }}</span>
+          <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-bg-tertiary" :class="badgeColor(percentage(gpu.vram_used_mb ?? 0, gpu.vram_total_mb))">
+            {{ percentage(gpu.vram_used_mb ?? 0, gpu.vram_total_mb) }}%
           </span>
         </div>
       </div>
       <div class="w-full h-3 bg-bg-tertiary rounded-full overflow-hidden">
         <div
-          class="h-full rounded-full transition-all duration-500"
-          :class="barColor(percentage(gpu.vram_used_mb, gpu.vram_total_mb))"
-          :style="{ width: `${percentage(gpu.vram_used_mb, gpu.vram_total_mb)}%` }"
+            class="h-full rounded-full transition-all duration-500"
+            :class="barColor(percentage(gpu.vram_used_mb ?? 0, gpu.vram_total_mb))"
+            :style="{ width: `${percentage(gpu.vram_used_mb ?? 0, gpu.vram_total_mb)}%` }"
         />
       </div>
     </div>
+
+    <!-- GPU: integrated card (load %), e.g. Jetson/Tegra hosts -->
+    <div v-else-if="gpu && gpu.load_percent !== undefined">
+      <div class="flex justify-between items-center text-sm mb-2">
+        <span class="text-text-primary font-medium">{{ gpu.name }}</span>
+        <div class="flex items-center gap-2">
+          <span class="text-text-secondary text-xs">load</span>
+          <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-bg-tertiary" :class="badgeColor(gpu.load_percent)">
+            {{ gpu.load_percent }}%
+          </span>
+        </div>
+      </div>
+      <div class="w-full h-3 bg-bg-tertiary rounded-full overflow-hidden">
+        <div
+            class="h-full rounded-full transition-all duration-500"
+            :class="barColor(gpu.load_percent)"
+            :style="{ width: `${gpu.load_percent}%` }"
+        />
+      </div>
+    </div>
+
+    <!-- GPU: temp-only fallback, e.g. Tegra host without the load-% textfile-collector script yet -->
+    <div v-else-if="gpu && gpu.temp_celsius !== undefined" class="flex items-center justify-between text-sm">
+      <span class="text-text-primary font-medium">{{ gpu.name }}</span>
+      <span class="text-text-secondary text-xs">{{ gpu.temp_celsius }}°C (load % unavailable)</span>
+    </div>
+
     <div v-else class="flex items-center gap-2 text-sm text-text-secondary/60">
       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M12 9v2m0 4h.01M5.07 19H19a2 2 0 001.75-2.97L13.74 4.36a2 2 0 00-3.5 0L3.32 16.03A2 2 0 005.07 19z" stroke-linecap="round" stroke-linejoin="round" />

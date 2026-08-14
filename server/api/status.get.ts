@@ -10,20 +10,20 @@ export default defineEventHandler(async (event) => {
     const psRes = await ollamaFetch(event, '/api/ps')
     const psData = await psRes.json() as { models?: any[] }
 
-    const [ram, gpu] = await Promise.all([getRamInfo(), getGpuInfo()])
+    const [cpu, ram, gpu] = await Promise.all([getCpuInfo(event), getRamInfo(event), getGpuInfo(event)])
 
     return {
       online: true,
       version: versionData.version,
       models_running: psData.models || [],
-      system: { ram, gpu },
+      system: { cpu, ram, gpu },
     }
   } catch {
     return {
       online: false,
       version: null,
       models_running: [],
-      system: { ram: await getRamInfo(), gpu: await getGpuInfo() },
+      system: { cpu: await getCpuInfo(event), ram: await getRamInfo(event), gpu: await getGpuInfo(event) },
     }
   }
 })

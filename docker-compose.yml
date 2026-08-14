@@ -1,7 +1,14 @@
 services:
   dashboard:
     build: .
-    network_mode: host
     environment:
-      - NUXT_OLLAMA_HOST=http://localhost:11434
+      - NUXT_OLLAMA_HOST=http://llm1.lab:11434
+      - NUXT_PROMETHEUS_URL=http://srv1.lab:9090
+      - NUXT_PROMETHEUS_INSTANCE=llm1
     restart: unless-stopped
+    ports:
+      - "3081:3000"
+
+networks:
+  default:
+    name: llm_network

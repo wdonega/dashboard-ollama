@@ -1,13 +1,14 @@
 interface SystemInfo {
+  cpu: { used_percent: number }
   ram: { used_mb: number; total_mb: number }
-  gpu: { name: string; vram_used_mb: number; vram_total_mb: number } | null
+  gpu: { name: string; vram_used_mb?: number; vram_total_mb?: number; load_percent?: number; temp_celsius?: number } | null
 }
 
 export const useOllamaStore = defineStore('ollama', () => {
   const online = ref(false)
   const version = ref<string | null>(null)
   const modelsRunning = ref<any[]>([])
-  const system = ref<SystemInfo>({ ram: { used_mb: 0, total_mb: 0 }, gpu: null })
+  const system = ref<SystemInfo>({ cpu: { used_percent: 0 }, ram: { used_mb: 0, total_mb: 0 }, gpu: null })
 
   async function fetchStatus() {
     try {
