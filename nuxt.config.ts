@@ -35,5 +35,11 @@ export default defineNuxtConfig({
     // /api/v1/label/instance/values on your Prometheus — this homelab
     // uses short hostnames, not host:port)
     prometheusInstance: '',
+    // public: exposed to the client bundle, not just server-side
+    public: {
+      // Overridable via NUXT_PUBLIC_APP_TITLE env var; falls back to
+      // 'IA LAB' if unset.
+      appTitle: 'AI LAB',
+    },
   },
 })

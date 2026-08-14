@@ -5,6 +5,7 @@ services:
       - NUXT_OLLAMA_HOST=http://llm1.lab:11434
       - NUXT_PROMETHEUS_URL=http://srv1.lab:9090
       - NUXT_PROMETHEUS_INSTANCE=llm1
+      - NUXT_PUBLIC_APP_TITLE=llm1.lab
     restart: unless-stopped
     ports:
       - "3081:3000"

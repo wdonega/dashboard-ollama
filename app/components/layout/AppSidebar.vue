@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
+const { public: publicConfig } = useRuntimeConfig()
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: 'dashboard' },
@@ -24,8 +25,8 @@ function isActive(item: { path: string }) {
 <template>
   <!-- Mobile hamburger -->
   <button
-    class="fixed top-4 left-4 z-[60] md:hidden p-2.5 bg-bg-secondary border border-border rounded-xl cursor-pointer"
-    @click="mobileOpen = !mobileOpen"
+      class="fixed top-4 left-4 z-[60] md:hidden p-2.5 bg-bg-secondary border border-border rounded-xl cursor-pointer"
+      @click="mobileOpen = !mobileOpen"
   >
     <span class="block w-5 h-0.5 bg-text-primary mb-1.5 transition-transform" :class="mobileOpen ? 'rotate-45 translate-y-2' : ''" />
     <span class="block w-5 h-0.5 bg-text-primary mb-1.5 transition-opacity" :class="mobileOpen ? 'opacity-0' : ''" />
@@ -35,15 +36,15 @@ function isActive(item: { path: string }) {
   <!-- Overlay for mobile -->
   <Transition name="fade">
     <div
-      v-if="mobileOpen"
-      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
-      @click="mobileOpen = false"
+        v-if="mobileOpen"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+        @click="mobileOpen = false"
     />
   </Transition>
 
   <aside
-    class="fixed left-0 top-0 h-screen w-64 bg-bg-secondary border-r border-border flex flex-col z-50 transition-transform duration-300 md:translate-x-0"
-    :class="mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
+      class="fixed left-0 top-0 h-screen w-64 bg-bg-secondary border-r border-border flex flex-col z-50 transition-transform duration-300 md:translate-x-0"
+      :class="mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
   >
     <!-- Brand -->
     <div class="p-5 border-b border-border">
@@ -54,14 +55,14 @@ function isActive(item: { path: string }) {
           </svg>
         </div>
         <div>
-          <h1 class="text-lg font-bold text-text-primary tracking-wide" style="font-family: var(--font-heading)">IA LAB</h1>
+          <h1 class="text-lg font-bold text-text-primary tracking-wide" style="font-family: var(--font-heading)">{{ publicConfig.appTitle }}</h1>
           <p class="text-xs text-text-secondary tracking-widest uppercase">Ollama Dashboard</p>
         </div>
       </div>
       <div class="flex items-center gap-2 mt-3 text-sm text-text-secondary">
         <span
-          class="w-2 h-2 rounded-full shrink-0 transition-shadow duration-300"
-          :class="online ? 'bg-success shadow-[0_0_8px_#22c55e]' : 'bg-danger'"
+            class="w-2 h-2 rounded-full shrink-0 transition-shadow duration-300"
+            :class="online ? 'bg-success shadow-[0_0_8px_#22c55e]' : 'bg-danger'"
         />
         {{ online ? 'Connected' : 'Disconnected' }}
       </div>
@@ -70,14 +71,14 @@ function isActive(item: { path: string }) {
     <!-- Navigation -->
     <nav class="flex-1 p-3 space-y-1">
       <NuxtLink
-        v-for="item in navItems"
-        :key="item.path"
-        :to="item.path"
-        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 cursor-pointer"
-        :class="isActive(item)
+          v-for="item in navItems"
+          :key="item.path"
+          :to="item.path"
+          class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 cursor-pointer"
+          :class="isActive(item)
           ? 'bg-accent/10 text-accent border-l-2 border-accent'
           : 'text-text-secondary hover:bg-bg-tertiary hover:text-text-primary'"
-        @click="mobileOpen = false"
+          @click="mobileOpen = false"
       >
         <!-- Dashboard icon -->
         <svg v-if="item.icon === 'dashboard'" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -108,9 +109,9 @@ function isActive(item: { path: string }) {
     <div v-if="modelsStore.operationsInProgress.size > 0" class="p-3 border-t border-border">
       <h4 class="text-xs text-text-secondary px-2 mb-2 uppercase tracking-wider">Operations</h4>
       <div
-        v-for="[name, op] in modelsStore.operationsInProgress"
-        :key="name"
-        class="px-2 py-2 text-xs"
+          v-for="[name, op] in modelsStore.operationsInProgress"
+          :key="name"
+          class="px-2 py-2 text-xs"
       >
         <div class="flex justify-between text-text-secondary mb-1">
           <span class="truncate">{{ name }}</span>
@@ -118,8 +119,8 @@ function isActive(item: { path: string }) {
         </div>
         <div class="w-full h-1.5 bg-bg-tertiary rounded-full overflow-hidden">
           <div
-            class="h-full bg-accent rounded-full transition-all duration-500"
-            :style="{ width: op.total > 0 ? `${(op.progress / op.total) * 100}%` : '0%' }"
+              class="h-full bg-accent rounded-full transition-all duration-500"
+              :style="{ width: op.total > 0 ? `${(op.progress / op.total) * 100}%` : '0%' }"
           />
         </div>
       </div>
